@@ -48,4 +48,5 @@ class CourseSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Course
-        fields = ['id', 'course_code', 'course_name', 'program', 'faculty_members']  # Remove 'description'
+        fields = ['id', 'course_code', 'course_name', 'program', 'faculty_members']
+        ref_name = 'AccountCourseSerializer' 

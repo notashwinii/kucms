@@ -87,12 +87,11 @@ class Faculty(models.Model):
     def __str__(self):
         return self.name
 
-# Course model
 class Course(models.Model):
     course_code = models.CharField(max_length=50, null=True, unique=True)
     course_name = models.CharField(max_length=255, null=True)
-    department = models.ForeignKey(Department, null=True,related_name="courses", on_delete=models.CASCADE)
-    program = models.ForeignKey(Program, null=True, related_name="courses", on_delete=models.CASCADE)
+    department = models.ForeignKey(Department, null=True, related_name="account_courses", on_delete=models.CASCADE)
+    program = models.ForeignKey(Program, null=True, related_name="account_courses", on_delete=models.CASCADE)
 
     def __str__(self):
         return self.course_name

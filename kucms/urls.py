@@ -18,6 +18,7 @@ schema_view = get_schema_view(
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+     path('course/', include('course.urls')), 
     path('accounts/', include('accounts.urls')),  # Make sure you have URL patterns in the accounts app
     path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),  # Swagger UI
 ]
