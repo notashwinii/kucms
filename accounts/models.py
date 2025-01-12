@@ -40,7 +40,10 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     is_staff = models.BooleanField(default=False)  # Set only for admin and faculty
     is_superuser = models.BooleanField(default=False)  # Only Admin should have this
     date_joined = models.DateTimeField(auto_now_add=True)
-
+    program = models.ForeignKey('Program', null=True, blank=True, on_delete=models.SET_NULL)  # For students
+    department = models.ForeignKey('Department', null=True, blank=True, on_delete=models.SET_NULL)  # For faculty
+    session = models.CharField(max_length=10, null=True, blank=True)  # For students
+    
     objects = CustomUserManager()
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
@@ -48,24 +51,9 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     def __str__(self):
         return self.email
 
-    def has_perm(self, perm, obj=None):
-        # Permissions for the user (e.g., Admin will have all perms)
-        if self.is_superuser:
-            return True
-        return super().has_perm(perm, obj)
-
-    def has_module_perms(self, app_label):
-        # Module-level permissions for the user
-        if self.is_superuser:
-            return True
-        return super().has_module_perms(app_label)
-
-
-
 # Department model
 class Department(models.Model):
-    
-    name= models.CharField(max_length=255, null=True)
+    name = models.CharField(max_length=255, null=True)
 
     def __str__(self):
         return self.name
@@ -73,7 +61,7 @@ class Department(models.Model):
 # Program model
 class Program(models.Model):
     name = models.CharField(max_length=255)
-    department = models.ForeignKey(Department, related_name='programs_in', on_delete=models.CASCADE)  # changed related_name
+    department = models.ForeignKey(Department, related_name='programs_in', on_delete=models.CASCADE)
 
     def __str__(self):
         return self.name
@@ -87,6 +75,7 @@ class Faculty(models.Model):
     def __str__(self):
         return self.name
 
+# Course model
 class Course(models.Model):
     course_code = models.CharField(max_length=50, null=True, unique=True)
     course_name = models.CharField(max_length=255, null=True)

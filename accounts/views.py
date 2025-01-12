@@ -194,3 +194,27 @@ class CourseView(APIView):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+# --- User Registration Views ---
+class RegisterUserView(APIView):
+    permission_classes = [IsAdminUser]
+
+    @swagger_auto_schema(
+        operation_summary="Register New User",
+        operation_description="Register a new user (admin, faculty, or student).",
+        request_body=UserSerializer,
+        responses={
+            201: UserSerializer,
+            400: "Bad request - Invalid data",
+        },
+    )
+    def post(self, request):
+        """
+        Register a new user with the role (admin, faculty, or student).
+        """
+        serializer = UserSerializer(data=request.data)
+        if serializer.is_valid():
+            user = serializer.save()
+            return Response(user, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

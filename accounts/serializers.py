@@ -1,10 +1,11 @@
 from rest_framework import serializers
-from .models import CustomUser, Department, Faculty, Course, Program
+from django.contrib.auth import authenticate
+from .models import CustomUser, Department, Faculty, Course, Program, ProgramCourse, CourseSession
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser
-        fields = ['id', 'email', 'role', 'is_active', 'is_staff', 'date_joined']  # Updated fields
+        fields = ['id', 'email', 'role', 'is_active', 'is_staff', 'is_superuser', 'date_joined']  # Added is_superuser
 
 class LoginSerializer(serializers.Serializer):
     email = serializers.CharField()
@@ -42,11 +43,26 @@ class FacultySerializer(serializers.ModelSerializer):
         fields = ['id', 'name', 'department', 'description', 'courses']
 
 class CourseSerializer(serializers.ModelSerializer):
-    
+    # Include program and faculty members in the course serializer
     program = serializers.PrimaryKeyRelatedField(queryset=Program.objects.all())
     faculty_members = serializers.PrimaryKeyRelatedField(queryset=Faculty.objects.all(), many=True)
 
     class Meta:
         model = Course
         fields = ['id', 'course_code', 'course_name', 'program', 'faculty_members']
-        ref_name = 'AccountCourseSerializer' 
+
+class ProgramCourseSerializer(serializers.ModelSerializer):
+    program = serializers.PrimaryKeyRelatedField(queryset=Program.objects.all())
+    course = serializers.PrimaryKeyRelatedField(queryset=Course.objects.all())
+    
+    class Meta:
+        model = ProgramCourse
+        fields = ['id', 'program', 'course', 'semester']
+
+class CourseSessionSerializer(serializers.ModelSerializer):
+    program_course = serializers.PrimaryKeyRelatedField(queryset=ProgramCourse.objects.all())
+    faculty = serializers.PrimaryKeyRelatedField(queryset=Faculty.objects.all())
+
+    class Meta:
+        model = CourseSession
+        fields = ['id', 'program_course', 'faculty', 'session_year', 'semester', 'start_date', 'end_date']

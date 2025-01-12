@@ -1,11 +1,17 @@
 from django.urls import path
-from .views import DepartmentView, FacultyView, CourseView, ProgramView, UserDetailView, LoginView
+from .views import LoginView, UserDetailView, DepartmentView, ProgramView, FacultyView, CourseView, RegisterUserView
 
 urlpatterns = [
-    path('login/', LoginView.as_view(), name='user-login'),
-    path('user/', UserDetailView.as_view(), name='user-detail'),
-    path('departments/', DepartmentView.as_view(), name='department-list'),
-    path('faculties/', FacultyView.as_view(), name='faculty-list'),
-    path('courses/', CourseView.as_view(), name='course-list'),
-    path('programs/', ProgramView.as_view(), name='program-list'),
+    # Authentication views
+    path('login/', LoginView.as_view(), name='login'),
+    path('user/', UserDetailView.as_view(), name='user_detail'),
+
+    # Admin management views
+    path('departments/', DepartmentView.as_view(), name='department_list'),
+    path('programs/', ProgramView.as_view(), name='program_list'),
+    path('faculties/', FacultyView.as_view(), name='faculty_list'),
+    path('courses/', CourseView.as_view(), name='course_list'),
+
+    # User registration
+    path('register/', RegisterUserView.as_view(), name='register_user'),
 ]
